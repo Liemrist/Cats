@@ -1,0 +1,65 @@
+package com.example.kotlincats
+
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
+import coil.transform.CircleCropTransformation
+import com.example.kotlincats.api.CatResponse
+import kotlinx.android.synthetic.main.fragment_user.view.*
+
+/**
+ * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
+ * specified [OnListFragmentInteractionListener].
+ * TODO: Replace the implementation with code for your data type.
+ */
+class UserRecyclerViewAdapter(
+    private val users: List<CatResponse>,
+    private val interactionListener: UserFragment.OnListFragmentInteractionListener?
+) : RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder>() {
+
+    private var cats: List<CatResponse> = emptyList()
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.fragment_user, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val user = cats[position]
+
+        holder.bind(user) {
+                cat: CatResponse -> interactionListener?.onListFragmentInteraction(cat)
+        }
+    }
+
+    override fun getItemCount(): Int = cats.size
+
+    fun setCats(cats: List<CatResponse>) {
+        this.cats = cats
+//        notifyDataSetChanged()
+    }
+
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val idView: TextView = itemView.item_number
+        private val contentView: TextView = itemView.content
+        private val profileImage: ImageView = itemView.profileImage
+
+        // TODO: rename "item" to something more meaningful.
+        fun bind(item: CatResponse, clickListener: (CatResponse) -> Unit ) { // TODO: learn what Unit is.
+            idView.text = item.id
+            contentView.text = item.imageUrl
+            profileImage.load(item.imageUrl)  {
+                crossfade(true)
+                placeholder(R.drawable.ic_launcher_foreground)
+                transformations(CircleCropTransformation())
+            }
+            itemView.setOnClickListener { clickListener(item) }
+        }
+    }
+}
