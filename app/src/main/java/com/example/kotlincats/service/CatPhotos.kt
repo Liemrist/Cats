@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 
-object CatPhotos { // TODO: learn singletons and what is object in Kotlin.
+object CatPhotos {
 
     private val catServiceApi: CatServiceApi
 

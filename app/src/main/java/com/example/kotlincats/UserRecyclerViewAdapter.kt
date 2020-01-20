@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_user.view.*
  */
 class UserRecyclerViewAdapter(
     private val users: List<CatResponse>,
-    private val interactionListener: UserFragment.OnListFragmentInteractionListener?
+    private val interactionListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder>() {
 
     private var cats: List<CatResponse> = emptyList()
@@ -45,20 +45,26 @@ class UserRecyclerViewAdapter(
 //        notifyDataSetChanged()
     }
 
+    // TODO:
+    fun removeRow(row : Int) {
+//        cats.removeAt(row)
+        notifyItemRemoved(row)
+    }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val idView: TextView = itemView.item_number
         private val contentView: TextView = itemView.content
         private val profileImage: ImageView = itemView.profileImage
 
         // TODO: rename "item" to something more meaningful.
-        fun bind(item: CatResponse, clickListener: (CatResponse) -> Unit ) { // TODO: learn what Unit is.
-            idView.text = item.id
-            contentView.text = item.imageUrl
+        fun bind(item: CatResponse, clickListener: (CatResponse) -> Unit ) {
             profileImage.load(item.imageUrl)  {
                 crossfade(true)
                 placeholder(R.drawable.ic_launcher_foreground)
                 transformations(CircleCropTransformation())
             }
+            idView.text = item.id
+            contentView.text = item.imageUrl
             itemView.setOnClickListener { clickListener(item) }
         }
     }
