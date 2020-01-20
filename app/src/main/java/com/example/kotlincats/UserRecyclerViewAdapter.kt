@@ -12,14 +12,10 @@ import coil.transform.CircleCropTransformation
 import com.example.kotlincats.api.CatResponse
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
+
 class UserRecyclerViewAdapter(
     private val users: List<CatResponse>,
-    private val interactionListener: OnListFragmentInteractionListener?
+    private val interactionListener: (cat: CatResponse) -> Unit
 ) : RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder>() {
 
     private var cats: List<CatResponse> = emptyList()
@@ -34,7 +30,7 @@ class UserRecyclerViewAdapter(
         val user = cats[position]
 
         holder.bind(user) {
-                cat: CatResponse -> interactionListener?.onListFragmentInteraction(cat)
+                cat: CatResponse -> interactionListener(cat)
         }
     }
 

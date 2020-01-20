@@ -19,5 +19,5 @@ object CatPhotos {
         catServiceApi = retrofit.create()
     }
 
-    fun getCats(): Call<List<CatResponse>> = catServiceApi.getCats()
+    fun getCats(limit: Int): Call<List<CatResponse>> = catServiceApi.getCats(limit)
 }

@@ -10,16 +10,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-
-            val userFragment = UserFragment.newInstance(1) // TODO: pass movies here.
-
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.activity_main_frame, userFragment)
+                .replace(R.id.activity_main_frame, UserFragment())
                 .commit()
         }
     }
-
-
-
 }
