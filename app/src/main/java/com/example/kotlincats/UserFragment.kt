@@ -1,5 +1,7 @@
 package com.example.kotlincats
 
+import android.graphics.Canvas
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +11,12 @@ import android.widget.ProgressBar
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.api.CatResponse
 import com.example.kotlincats.service.CatPhotos
+import com.example.kotlincats.utils.SwipeToDeleteCallback
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,6 +45,15 @@ class UserFragment : Fragment() {
                     cat: CatResponse -> onListFragmentInteraction(cat)
             }
         }
+
+        val itemTouchHelper = context?.let {
+            ItemTouchHelper(object : SwipeToDeleteCallback(it) {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    (recyclerView.adapter as UserRecyclerViewAdapter).removeRow(viewHolder.adapterPosition)
+                }
+            })
+        }
+        itemTouchHelper?.attachToRecyclerView(recyclerView);
 
         return view
     }

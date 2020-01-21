@@ -27,9 +27,7 @@ class UserRecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val user = cats[position]
-
-        holder.bind(user) {
+        holder.bind(cats[position]) {
                 cat: CatResponse -> interactionListener(cat)
         }
     }
@@ -41,13 +39,16 @@ class UserRecyclerViewAdapter(
 //        notifyDataSetChanged()
     }
 
-    // TODO:
     fun removeRow(row : Int) {
-//        cats.removeAt(row)
+        val cat = cats[row]
+        cats = cats.minus(cat)
         notifyItemRemoved(row)
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(
+        itemView: View
+    ) : RecyclerView.ViewHolder(itemView) {
+
         private val idView: TextView = itemView.item_number
         private val contentView: TextView = itemView.content
         private val profileImage: ImageView = itemView.profileImage
