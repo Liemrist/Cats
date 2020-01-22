@@ -65,7 +65,7 @@ class UserListFragment : Fragment() {
         val actionBar: ActionBar? = activity?.supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(false)
 
-//        loadPhotos() // TODO: move it outta here.
+        loadPhotos() // TODO: don't load new photos if there is data in the DB.
     }
 
 
@@ -94,7 +94,7 @@ class UserListFragment : Fragment() {
         list.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
 
-        CatPhotos.getCats(5).enqueue(object : Callback<List<CatDto>> {
+        CatPhotos.getCats(30).enqueue(object : Callback<List<CatDto>> {
             override fun onFailure(call: Call<List<CatDto>>?, t: Throwable?) {
                 Snackbar.make(list, getString(R.string.api_error), Snackbar.LENGTH_LONG)
             }
@@ -110,6 +110,7 @@ class UserListFragment : Fragment() {
                             val users = mapCatsToUsers(body)
                             viewModel.insert(users)
                         }
+
                         list.visibility = View.VISIBLE
                         progressBar.visibility = View.GONE
                     }
@@ -124,7 +125,7 @@ class UserListFragment : Fragment() {
 
         for (cat in cats) {
             users.add(
-                User(cat.hashCode(), "",cat.imageUrl)
+                User(cat.hashCode(), cat.id, cat.imageUrl)
             )
         }
 

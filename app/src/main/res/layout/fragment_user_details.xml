@@ -31,10 +31,4 @@
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/linearLayout"
-        android:text="@string/hello_blank_fragment" />
-
 </RelativeLayout>
