@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class CatResponse ( // TODO: consider renaming to CatDto.
+data class CatDto (
     @Json(name = "id")
     val id: String,
     @Json(name = "url")

@@ -1,4 +1,4 @@
-package com.example.kotlincats
+package com.example.kotlincats.list
 
 
 import android.view.LayoutInflater
@@ -9,16 +9,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.transform.CircleCropTransformation
-import com.example.kotlincats.api.CatResponse
+import com.example.kotlincats.R
+import com.example.kotlincats.model.database.User
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
 
-class UserRecyclerViewAdapter(
-    private val users: List<CatResponse>,
-    private val interactionListener: (cat: CatResponse) -> Unit
-) : RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder>() {
+class UserListAdapter(
+    private var users: List<User>,
+    private val clickListener: (user: User) -> Unit
+) : RecyclerView.Adapter<UserListAdapter.ViewHolder>() {
 
-    private var cats: List<CatResponse> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -26,43 +26,50 @@ class UserRecyclerViewAdapter(
         return ViewHolder(view)
     }
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(cats[position]) {
-                cat: CatResponse -> interactionListener(cat)
+        holder.bind(users[position]) { user: User ->
+            clickListener(user)
         }
     }
 
-    override fun getItemCount(): Int = cats.size
 
-    fun setCats(cats: List<CatResponse>) {
-        this.cats = cats
-//        notifyDataSetChanged()
+    override fun getItemCount(): Int = users.size
+
+
+    fun setCats(users: List<User>) {
+        this.users = users
+        notifyDataSetChanged()
     }
 
-    fun removeRow(row : Int) {
-        val cat = cats[row]
-        cats = cats.minus(cat)
-        notifyItemRemoved(row)
+
+    fun removeRow(position : Int) {
+        val user = users[position]
+        users = users.minus(user)
+        notifyItemRemoved(position)
     }
+
 
     class ViewHolder(
         itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
 
+
         private val idView: TextView = itemView.item_number
         private val contentView: TextView = itemView.content
         private val profileImage: ImageView = itemView.profileImage
 
-        // TODO: rename "item" to something more meaningful.
-        fun bind(item: CatResponse, clickListener: (CatResponse) -> Unit ) {
-            profileImage.load(item.imageUrl)  {
+
+        fun bind(user: User, clickListener: (User) -> Unit ) {
+            profileImage.load(user.photoUrl)  {
                 crossfade(true)
                 placeholder(R.drawable.ic_launcher_foreground)
                 transformations(CircleCropTransformation())
             }
-            idView.text = item.id
-            contentView.text = item.imageUrl
-            itemView.setOnClickListener { clickListener(item) }
+            idView.text = user.id.toString()
+            contentView.text = user.name
+
+            itemView.setOnClickListener { clickListener(user) }
         }
     }
 }

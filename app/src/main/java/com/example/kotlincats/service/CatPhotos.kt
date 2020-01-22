@@ -1,6 +1,7 @@
 package com.example.kotlincats.service
 
-import com.example.kotlincats.api.CatResponse
+import com.example.kotlincats.api.CatDto
+import com.example.kotlincats.api.CatServiceApi
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -19,5 +20,5 @@ object CatPhotos {
         catServiceApi = retrofit.create()
     }
 
-    fun getCats(limit: Int): Call<List<CatResponse>> = catServiceApi.getCats(limit)
+    fun getCats(limit: Int): Call<List<CatDto>> = catServiceApi.getCats(limit)
 }
