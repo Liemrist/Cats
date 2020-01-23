@@ -1,14 +1,20 @@
 package com.example.kotlincats.model.database
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.example.kotlincats.model.User
 
 @Dao
 interface UserDao {
 
     // FIXME: If it's running on a separate thread, why it's not used with coroutines?
+//    @Query("SELECT * from user_table ORDER BY photoUrl ASC")
+//    fun getAlphabetizedUsers(): LiveData<List<User>>
+
     @Query("SELECT * from user_table ORDER BY photoUrl ASC")
-    fun getAlphabetizedUsers(): LiveData<List<User>>
+    suspend fun getUsers(): List<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: User)

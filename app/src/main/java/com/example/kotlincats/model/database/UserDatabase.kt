@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.kotlincats.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

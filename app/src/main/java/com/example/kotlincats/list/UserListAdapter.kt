@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.transform.CircleCropTransformation
 import com.example.kotlincats.R
-import com.example.kotlincats.model.database.User
+import com.example.kotlincats.model.User
 import kotlinx.android.synthetic.main.fragment_user.view.*
 
 
@@ -37,7 +37,7 @@ class UserListAdapter(
     override fun getItemCount(): Int = users.size
 
 
-    fun setCats(users: List<User>) {
+    fun setUsers(users: List<User>) {
         this.users = users
         notifyDataSetChanged()
     }

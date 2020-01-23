@@ -13,7 +13,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import coil.api.load
 import coil.transform.CircleCropTransformation
-import com.example.kotlincats.model.database.User
+import com.example.kotlincats.model.User
 
 
 class UserDetailsFragment : Fragment() {

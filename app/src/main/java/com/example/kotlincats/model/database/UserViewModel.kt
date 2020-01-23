@@ -3,24 +3,52 @@ package com.example.kotlincats.model.database
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.kotlincats.model.User
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserViewModel(application: Application) : AndroidViewModel(application) {
+
     private val repository: UserRepository
 
-    val users: LiveData<List<User>>
+    private val usersMutableLiveData = MutableLiveData<List<User>>()
+    private val isProgressBarVisibleMutableLiveData = MutableLiveData<Boolean>()
+
+    var users: LiveData<List<User>> = usersMutableLiveData
+    val isProgressBarVisible: LiveData<Boolean> = isProgressBarVisibleMutableLiveData
+
 
     init {
         val userDao = UserDatabase.getDatabase(application, viewModelScope).userDao()
 
         repository = UserRepository(userDao)
-        users = repository.allUsers
+//        users = repository.allUsers
     }
+
+
+    fun loadUsers() {
+        viewModelScope.launch  {
+            try {
+                isProgressBarVisibleMutableLiveData.value = true
+                val testUsers = withContext(Dispatchers.IO) {
+                    repository.getUsers()
+                }
+
+                usersMutableLiveData.value = testUsers
+            } finally {
+                isProgressBarVisibleMutableLiveData.value = false
+            }
+        }
+    }
+
 
     fun insert(user: User) = viewModelScope.launch {
         repository.insert(user)
     }
+
 
     fun insert(users: List<User>) = viewModelScope.launch {
         repository.insert(users)

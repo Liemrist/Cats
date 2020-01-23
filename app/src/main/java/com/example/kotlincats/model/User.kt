@@ -1,4 +1,4 @@
-package com.example.kotlincats.model.database
+package com.example.kotlincats.model
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
