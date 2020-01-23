@@ -1,9 +1,6 @@
 package com.example.kotlincats.model.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.kotlincats.model.User
 
 @Dao
@@ -30,4 +27,7 @@ interface UserDao {
 
     @Query("DELETE FROM user_table")
     suspend fun deleteAllUsers()
+
+    @Delete
+    suspend fun delete(user: User)
 }

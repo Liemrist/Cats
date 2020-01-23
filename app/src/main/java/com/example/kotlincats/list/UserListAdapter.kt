@@ -44,9 +44,14 @@ class UserListAdapter(
 
 
     fun removeRow(position : Int) {
-        val user = users[position]
+        val user = getUser(position)
         users = users.minus(user)
         notifyItemRemoved(position)
+    }
+
+
+    fun getUser(position: Int): User {
+        return users[position]
     }
 
 

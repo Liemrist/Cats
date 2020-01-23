@@ -29,6 +29,9 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun insert(users: List<User>) = userDao.insert(users)
 
 
+    suspend fun delete(user: User) = userDao.delete(user)
+
+
     private fun mapCatsToUsers(cats: List<CatDto>): List<User> {
         val users: ArrayList<User> = arrayListOf()
 

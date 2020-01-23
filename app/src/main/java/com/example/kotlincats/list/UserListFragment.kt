@@ -80,6 +80,9 @@ class UserListFragment : Fragment() {
         val itemTouchHelper = context?.let {
             ItemTouchHelper(object : SwipeToDeleteCallback(it) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    val user = listAdapter.getUser(viewHolder.adapterPosition)
+                    viewModel.delete(user)
+
                     listAdapter.removeRow(viewHolder.adapterPosition)
                 }
             })
