@@ -1,4 +1,4 @@
-package com.example.kotlincats.model.database
+package com.example.kotlincats.list
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kotlincats.model.User
+import com.example.kotlincats.model.database.UserDatabase
+import com.example.kotlincats.model.database.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,9 +24,13 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
 
     init {
-        val userDao = UserDatabase.getDatabase(application, viewModelScope).userDao()
+        val userDao = UserDatabase.getDatabase(
+            application,
+            viewModelScope
+        ).userDao()
 
-        repository = UserRepository(userDao)
+        repository =
+            UserRepository(userDao)
 //        users = repository.allUsers
     }
 
