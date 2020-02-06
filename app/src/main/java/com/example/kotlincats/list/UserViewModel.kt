@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.kotlincats.model.User
-import com.example.kotlincats.model.database.UserDatabase
-import com.example.kotlincats.model.database.UserRepository
+import com.example.kotlincats.database.UserDatabase
+import com.example.kotlincats.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

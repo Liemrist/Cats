@@ -1,6 +1,8 @@
-package com.example.kotlincats.model.database
+package com.example.kotlincats.repository
 
+import android.util.Log
 import com.example.kotlincats.api.CatDto
+import com.example.kotlincats.database.UserDao
 import com.example.kotlincats.model.User
 import com.example.kotlincats.service.CatPhotos
 
@@ -12,7 +14,7 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun getUsers(): List<User> {
         var users: List<User> = userDao.getUsers()
         // FIXME: DB is not populated here yet after storage clean.
-
+        Log.d("NETWORK", "UserRepository getUsers: $users")
         if (users.isEmpty()) {
             val cats = CatPhotos.getCats(30)
             users = mapCatsToUsers(cats)

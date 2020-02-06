@@ -1,4 +1,4 @@
-package com.example.kotlincats.model.database
+package com.example.kotlincats.database
 
 import android.content.Context
 import androidx.room.Database
