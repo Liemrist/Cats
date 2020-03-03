@@ -5,16 +5,18 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.kotlincats.application.CatsApplication
 import com.example.kotlincats.model.User
-import com.example.kotlincats.model.database.UserDatabase
 import com.example.kotlincats.model.database.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
 
 class UserViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository: UserRepository
+    @Inject lateinit var repository: UserRepository
 
     private val usersMutableLiveData = MutableLiveData<List<User>>()
     private val isProgressBarVisibleMutableLiveData = MutableLiveData<Boolean>()
@@ -24,14 +26,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
 
 
     init {
-        val userDao = UserDatabase.getDatabase(
-            application,
-            viewModelScope
-        ).userDao()
-
-        repository =
-            UserRepository(userDao)
-//        users = repository.allUsers
+        (application as CatsApplication).appComponent.inject(this)
     }
 
 

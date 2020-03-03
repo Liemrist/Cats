@@ -1,20 +1,18 @@
 package com.example.kotlincats.model.database
 
 import com.example.kotlincats.api.CatDto
+import com.example.kotlincats.api.UserServiceApi
 import com.example.kotlincats.model.User
-import com.example.kotlincats.service.CatPhotos
 
-class UserRepository(private val userDao: UserDao) {
-    // Room executes all queries on a separate thread.
-    // Observed LiveData will notify the observer when the data has changed.
-    //    val allUsers: LiveData<List<User>> = userDao.getAlphabetizedUsers()
+// FIXME: do I need an @Inject constructor here?
+class UserRepository(private val userDao: UserDao, private val userServiceApi: UserServiceApi) {
 
     suspend fun getUsers(): List<User> {
         var users: List<User> = userDao.getUsers()
         // FIXME: DB is not populated here yet after storage clean.
 
         if (users.isEmpty()) {
-            val cats = CatPhotos.getCats(30)
+            val cats = userServiceApi.getCats(30)
             users = mapCatsToUsers(cats)
 
             insert(users)
@@ -22,6 +20,7 @@ class UserRepository(private val userDao: UserDao) {
 
         return users
     }
+
 
     suspend fun insert(user: User) = userDao.insert(user)
 
