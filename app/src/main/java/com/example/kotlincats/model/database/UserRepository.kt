@@ -1,20 +1,26 @@
 package com.example.kotlincats.model.database
 
-import com.example.kotlincats.api.CatDto
-import com.example.kotlincats.api.UserServiceApi
+import com.example.kotlincats.api.catApi.CatApi
+import com.example.kotlincats.api.hipsterIpsumApi.HipsterIpsumApi
 import com.example.kotlincats.model.User
+import com.example.kotlincats.utils.Mappers
+import javax.inject.Inject
 
-// FIXME: do I need an @Inject constructor here?
-class UserRepository(private val userDao: UserDao, private val userServiceApi: UserServiceApi) {
+class UserRepository @Inject constructor(
+    private val userDao: UserDao,
+    private val catApi: CatApi,
+    private val hipsterIpsumApi: HipsterIpsumApi
+) {
 
     suspend fun getUsers(): List<User> {
         var users: List<User> = userDao.getUsers()
         // FIXME: DB is not populated here yet after storage clean.
 
         if (users.isEmpty()) {
-            val cats = userServiceApi.getCats(30)
-            users = mapCatsToUsers(cats)
+            val cats = catApi.getCats(30)
+            val text = hipsterIpsumApi.getParagraphs(30);
 
+            users = Mappers.mapCatsWithTextToUsers(cats, text)
             insert(users)
         }
 
@@ -29,17 +35,4 @@ class UserRepository(private val userDao: UserDao, private val userServiceApi: U
 
 
     suspend fun delete(user: User) = userDao.delete(user)
-
-
-    private fun mapCatsToUsers(cats: List<CatDto>): List<User> {
-        val users: ArrayList<User> = arrayListOf()
-
-        for (cat in cats) {
-            users.add(
-                User(cat.hashCode(), cat.id, cat.imageUrl)
-            )
-        }
-
-        return users
-    }
 }

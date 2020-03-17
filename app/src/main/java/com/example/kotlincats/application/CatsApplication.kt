@@ -18,7 +18,6 @@ class CatsApplication : Application() {
 
     private fun initializeComponent(): AppComponent {
         return DaggerAppComponent.builder()
-            // FIXME: Why only app module and not others?
             .appModule(AppModule(this))
             .build()
     }

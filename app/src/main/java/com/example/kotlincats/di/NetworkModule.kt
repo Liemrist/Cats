@@ -1,6 +1,7 @@
 package com.example.kotlincats.di
 
-import com.example.kotlincats.api.UserServiceApi
+import com.example.kotlincats.api.catApi.CatApi
+import com.example.kotlincats.api.hipsterIpsumApi.HipsterIpsumApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -21,7 +22,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun userServiceApi(retrofit: Retrofit): UserServiceApi {
-        return retrofit.create(UserServiceApi::class.java)
+    fun provideCatApi(retrofit: Retrofit): CatApi {
+        return retrofit.create(CatApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHipsterIpsumApi(retrofit: Retrofit): HipsterIpsumApi {
+        return retrofit.create(HipsterIpsumApi::class.java)
     }
 }
