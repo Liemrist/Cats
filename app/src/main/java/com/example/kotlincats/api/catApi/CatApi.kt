@@ -1,12 +1,12 @@
-package com.example.kotlincats.api
+package com.example.kotlincats.api.catApi
 
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface CatServiceApi {
+interface CatApi {
 
     @GET("images/search")
     suspend fun getCats(
-        @Query("limit") limit: Int
+        @Query("limit") catsNumber: Int
     ): List<CatDto>
 }

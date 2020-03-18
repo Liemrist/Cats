@@ -37,6 +37,9 @@ class UserDetailsFragment : Fragment() {
         val textView = view.findViewById<TextView>(R.id.nameText)
         textView.text = user?.name ?: ""
 
+        val infoTextView = view.findViewById<TextView>(R.id.infoText)
+        infoTextView.text = user?.info ?: ""
+
         val imageView = view.findViewById<ImageView>(R.id.imageView)
         imageView.load(user?.photoUrl) {
             crossfade(true)
