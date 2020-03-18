@@ -1,4 +1,4 @@
-package com.example.kotlincats.model.database
+package com.example.kotlincats.database
 
 import androidx.room.*
 import com.example.kotlincats.model.User

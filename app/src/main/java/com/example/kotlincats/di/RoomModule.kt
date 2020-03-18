@@ -2,8 +2,8 @@ package com.example.kotlincats.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.kotlincats.model.database.UserDao
-import com.example.kotlincats.model.database.UserDatabase
+import com.example.kotlincats.database.UserDao
+import com.example.kotlincats.database.UserDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

@@ -1,7 +1,8 @@
-package com.example.kotlincats.model.database
+package com.example.kotlincats.repository
 
 import com.example.kotlincats.api.catApi.CatApi
 import com.example.kotlincats.api.hipsterIpsumApi.HipsterIpsumApi
+import com.example.kotlincats.database.UserDao
 import com.example.kotlincats.model.User
 import com.example.kotlincats.utils.Mappers
 import javax.inject.Inject
