@@ -7,6 +7,7 @@ import com.example.kotlincats.model.User
 import com.example.kotlincats.utils.Mappers
 import javax.inject.Inject
 
+// DATA LAYER
 class UserRepository @Inject constructor(
     private val userDao: UserDao,
     private val catApi: CatApi,

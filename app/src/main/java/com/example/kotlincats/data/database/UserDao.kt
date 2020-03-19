@@ -1,7 +1,7 @@
 package com.example.kotlincats.database
 
 import androidx.room.*
-import com.example.kotlincats.model.User
+import com.example.kotlincats.domain.model.User
 
 @Dao
 interface UserDao {

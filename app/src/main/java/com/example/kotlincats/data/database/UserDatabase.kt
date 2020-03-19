@@ -2,7 +2,7 @@ package com.example.kotlincats.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.kotlincats.model.User
+import com.example.kotlincats.domain.model.User
 
 
 @Database(entities = [User::class], version = 1, exportSchema = false)

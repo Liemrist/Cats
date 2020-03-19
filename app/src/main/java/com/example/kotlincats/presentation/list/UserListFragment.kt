@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.R
-import com.example.kotlincats.UserDetailsFragment
+import com.example.kotlincats.presentation.UserDetailsFragment
 import com.example.kotlincats.model.User
 import com.example.kotlincats.utils.SwipeToDeleteCallback
 

@@ -1,11 +1,9 @@
-package com.example.kotlincats.utils
+package com.example.kotlincats.data
 
 import com.example.kotlincats.api.catApi.CatDto
-import com.example.kotlincats.model.User
+import com.example.kotlincats.domain.model.User
 
-class Mappers {
-
-    companion object {
+class UserMapper {
 
         fun mapCatsWithTextToUsers(
             cats: List<CatDto>,
@@ -27,5 +25,4 @@ class Mappers {
 
             return users
         }
-    }
 }
