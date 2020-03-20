@@ -1,8 +1,9 @@
-package com.example.kotlincats
+package com.example.kotlincats.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.kotlincats.list.UserListFragment
+import com.example.kotlincats.R
+import com.example.kotlincats.presentation.list.CatListFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -12,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.activity_main_frame, UserListFragment())
+                .replace(R.id.activity_main_frame, CatListFragment())
                 .commitNow()
         }
     }

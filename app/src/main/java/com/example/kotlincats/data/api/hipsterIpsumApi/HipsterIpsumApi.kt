@@ -1,4 +1,4 @@
-package com.example.kotlincats.api.hipsterIpsumApi
+package com.example.kotlincats.data.api.hipsterIpsumApi
 
 import retrofit2.http.GET
 import retrofit2.http.Query

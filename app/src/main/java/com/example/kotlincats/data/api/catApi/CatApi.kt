@@ -1,4 +1,4 @@
-package com.example.kotlincats.api.catApi
+package com.example.kotlincats.data.api.catApi
 
 import retrofit2.http.GET
 import retrofit2.http.Query

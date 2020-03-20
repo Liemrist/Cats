@@ -1,7 +1,7 @@
 package com.example.kotlincats.di
 
-import com.example.kotlincats.api.catApi.CatApi
-import com.example.kotlincats.api.hipsterIpsumApi.HipsterIpsumApi
+import com.example.kotlincats.data.api.catApi.CatApi
+import com.example.kotlincats.data.api.hipsterIpsumApi.HipsterIpsumApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit

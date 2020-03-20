@@ -1,4 +1,4 @@
-package com.example.kotlincats.api.catApi
+package com.example.kotlincats.data.api.catApi
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
