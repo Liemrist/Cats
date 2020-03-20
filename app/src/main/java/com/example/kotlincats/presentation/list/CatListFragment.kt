@@ -1,5 +1,6 @@
-package com.example.kotlincats.list
+package com.example.kotlincats.presentation.list
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,30 +16,39 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.R
-import com.example.kotlincats.presentation.UserDetailsFragment
-import com.example.kotlincats.model.User
-import com.example.kotlincats.utils.SwipeToDeleteCallback
+import com.example.kotlincats.application.CatsApplication
+import com.example.kotlincats.di.ViewModelFactory
+import com.example.kotlincats.presentation.CatDetailsFragment
+import javax.inject.Inject
 
 
 /**
- * A fragment representing a list of Users.
+ * A fragment representing a list of Cats.
  */
-class UserListFragment : Fragment() {
+class CatListFragment : Fragment() {
 
 
-    private lateinit var listAdapter: UserListAdapter
+    private lateinit var listAdapter: CatListAdapter
     private lateinit var list: RecyclerView
     private lateinit var progressBar: ProgressBar
-    private lateinit var viewModel: UserViewModel
+    private lateinit var viewModel: CatListViewModel
 
+    @Inject lateinit var viewModelFactory: ViewModelFactory
+
+
+    override fun onAttach(context: Context) {
+        (context.applicationContext as CatsApplication).appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_user_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_cat_list, container, false)
 
-        viewModel = ViewModelProviders.of(this)[UserViewModel::class.java]
+        viewModel = ViewModelProviders.of(
+            this, viewModelFactory)[CatListViewModel::class.java]
 
         initUserList(view)
 
@@ -49,7 +59,7 @@ class UserListFragment : Fragment() {
             list.isVisible = !isVisible
         })
 
-        viewModel.loadUsers()
+        viewModel.loadCats()
 
         return view
     }
@@ -65,8 +75,8 @@ class UserListFragment : Fragment() {
 
 
     private fun initUserList(view: View) {
-        listAdapter = UserListAdapter(emptyList()) { user: User ->
-            showDetailsFragment(user)
+        listAdapter = CatListAdapter { itemPosition: Int ->
+            showDetailsFragment(itemPosition)
         }
 
         list = view.findViewById(R.id.list)
@@ -77,10 +87,10 @@ class UserListFragment : Fragment() {
 
         // Add swipe handling to RecyclerView.
         val itemTouchHelper = context?.let {
+            // FIXME: remove context from args.
             ItemTouchHelper(object : SwipeToDeleteCallback(it) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val user = listAdapter.getUser(viewHolder.adapterPosition)
-                    viewModel.delete(user)
+                    viewModel.delete(listAdapter.getCat(viewHolder.adapterPosition))
 
                     listAdapter.removeRow(viewHolder.adapterPosition)
                 }
@@ -88,18 +98,20 @@ class UserListFragment : Fragment() {
         }
         itemTouchHelper?.attachToRecyclerView(list)
 
-        viewModel.users.observe(this, Observer { users ->
-            listAdapter.setUsers(users)
+        viewModel.cats.observe(this, Observer { users ->
+            listAdapter.setCats(users)
         })
     }
 
-    private fun showDetailsFragment(user: User) {
-        val fragment = UserDetailsFragment.newInstance(user)
+    private fun showDetailsFragment(userPosition: Int) {
+        val fragment = CatDetailsFragment.newInstance(
+            listAdapter.getCat(userPosition)
+        )
 
-        activity!!.supportFragmentManager
-            .beginTransaction()
-            .addToBackStack(null)
-            .replace(R.id.activity_main_frame, fragment)
-            .commit()
+        activity?.supportFragmentManager
+            ?.beginTransaction()
+            ?.addToBackStack(null)
+            ?.replace(R.id.activity_main_frame, fragment)
+            ?.commit()
     }
 }

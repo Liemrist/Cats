@@ -1,4 +1,4 @@
-package com.example.kotlincats.utils
+package com.example.kotlincats.presentation.list
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.R
 
-// FIXME: is it ok to pass a Context here?
+
 abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
     private val background = ColorDrawable()

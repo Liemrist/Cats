@@ -1,4 +1,4 @@
-package com.example.kotlincats
+package com.example.kotlincats.presentation
 
 
 import android.os.Bundle
@@ -13,18 +13,19 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import coil.api.load
 import coil.transform.CircleCropTransformation
-import com.example.kotlincats.model.User
+import com.example.kotlincats.R
+import com.example.kotlincats.domain.model.Cat
 
 
-class UserDetailsFragment : Fragment() {
+class CatDetailsFragment : Fragment() {
 
-    private var user: User? = null
+    private var cat: Cat? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        user = arguments?.getParcelable(ARG_USER)
+        cat = arguments?.getParcelable(ARG_CAT)
     }
 
 
@@ -32,16 +33,16 @@ class UserDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_user_details, container, false)
+        val view = inflater.inflate(R.layout.fragment_cat_details, container, false)
 
         val textView = view.findViewById<TextView>(R.id.nameText)
-        textView.text = user?.name ?: ""
+        textView.text = cat?.name ?: ""
 
         val infoTextView = view.findViewById<TextView>(R.id.infoText)
-        infoTextView.text = user?.info ?: ""
+        infoTextView.text = cat?.info ?: ""
 
         val imageView = view.findViewById<ImageView>(R.id.imageView)
-        imageView.load(user?.photoUrl) {
+        imageView.load(cat?.photoUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_foreground)
             transformations(CircleCropTransformation())
@@ -75,12 +76,12 @@ class UserDetailsFragment : Fragment() {
 
     companion object {
 
-        private const val ARG_USER = "ARG_USER"
+        private const val ARG_CAT = "ARG_CAT"
 
-        fun newInstance(user: User): UserDetailsFragment {
-            val fragment = UserDetailsFragment()
+        fun newInstance(cat: Cat): CatDetailsFragment {
+            val fragment = CatDetailsFragment()
             val bundle = Bundle()
-            bundle.putParcelable(ARG_USER, user)
+            bundle.putParcelable(ARG_CAT, cat)
             fragment.arguments = bundle
             return fragment
         }

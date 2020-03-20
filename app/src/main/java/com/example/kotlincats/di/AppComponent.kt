@@ -1,6 +1,6 @@
 package com.example.kotlincats.di
 
-import com.example.kotlincats.list.UserViewModel
+import com.example.kotlincats.presentation.list.CatListFragment
 import dagger.Component
 import javax.inject.Singleton
 
@@ -9,10 +9,11 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         NetworkModule::class,
-        RoomModule::class
+        RoomModule::class,
+        ViewModelModule::class
     ]
 )
 interface AppComponent {
 
-    fun inject(target: UserViewModel)
+    fun inject(target: CatListFragment)
 }
