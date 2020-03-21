@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -17,8 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.R
 import com.example.kotlincats.application.CatsApplication
-import com.example.kotlincats.di.ViewModelFactory
+import com.example.kotlincats.di.viewModel.ViewModelFactory
 import com.example.kotlincats.presentation.CatDetailsFragment
+import kotlinx.android.synthetic.main.fragment_cat_list.*
 import javax.inject.Inject
 
 
@@ -28,11 +28,10 @@ import javax.inject.Inject
 class CatListFragment : Fragment() {
 
 
-    private lateinit var listAdapter: CatListAdapter
-    private lateinit var list: RecyclerView
-    private lateinit var progressBar: ProgressBar
+    private lateinit var catListAdapter: CatListAdapter
     private lateinit var viewModel: CatListViewModel
 
+    @Inject lateinit var applicationContext: Context
     @Inject lateinit var viewModelFactory: ViewModelFactory
 
 
@@ -45,67 +44,63 @@ class CatListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_cat_list, container, false)
-
-        viewModel = ViewModelProviders.of(
-            this, viewModelFactory)[CatListViewModel::class.java]
-
-        initUserList(view)
-
-        progressBar = view.findViewById(R.id.progressBar)
-
-        viewModel.isProgressBarVisible.observe(this, Observer { isVisible ->
-            progressBar.isVisible = isVisible
-            list.isVisible = !isVisible
-        })
-
-        viewModel.loadCats()
-
-        return view
+        return inflater.inflate(R.layout.fragment_cat_list, container, false)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initCatList()
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[CatListViewModel::class.java]
+
+        viewModel.isProgressBarVisible.observe(this, Observer { isVisible ->
+            progressBar.isVisible = isVisible
+            catList.isVisible = !isVisible
+        })
+
+        viewModel.cats.observe(this, Observer { cats ->
+            catListAdapter.setCats(cats)
+        })
+
+        // Action bar setup.
         val activity = activity as AppCompatActivity?
         val actionBar: ActionBar? = activity?.supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(false)
+
+        viewModel.loadCats()
     }
 
 
-    private fun initUserList(view: View) {
-        listAdapter = CatListAdapter { itemPosition: Int ->
+    private fun initCatList() {
+        catListAdapter = CatListAdapter { itemPosition: Int ->
             showDetailsFragment(itemPosition)
         }
 
-        list = view.findViewById(R.id.list)
-        list.apply {
-            adapter = listAdapter
+        catList.apply {
+            adapter = catListAdapter
             layoutManager = LinearLayoutManager(context)
         }
 
         // Add swipe handling to RecyclerView.
-        val itemTouchHelper = context?.let {
-            // FIXME: remove context from args.
-            ItemTouchHelper(object : SwipeToDeleteCallback(it) {
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    viewModel.delete(listAdapter.getCat(viewHolder.adapterPosition))
-
-                    listAdapter.removeRow(viewHolder.adapterPosition)
-                }
-            })
-        }
-        itemTouchHelper?.attachToRecyclerView(list)
-
-        viewModel.cats.observe(this, Observer { users ->
-            listAdapter.setCats(users)
-        })
+        ItemTouchHelper(object : SwipeToDeleteCallback(applicationContext) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                removeListRow(viewHolder.adapterPosition)
+            }
+        }).attachToRecyclerView(catList)
     }
 
-    private fun showDetailsFragment(userPosition: Int) {
+
+    private fun removeListRow(position: Int) {
+        viewModel.delete(catListAdapter.getCat(position))
+        catListAdapter.removeRow(position)
+    }
+
+
+    private fun showDetailsFragment(position: Int) {
         val fragment = CatDetailsFragment.newInstance(
-            listAdapter.getCat(userPosition)
+            catListAdapter.getCat(position)
         )
 
         activity?.supportFragmentManager

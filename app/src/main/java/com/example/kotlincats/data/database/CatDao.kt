@@ -7,7 +7,7 @@ import com.example.kotlincats.domain.model.Cat
 interface CatDao {
 
     @Query("SELECT * from cat_table ORDER BY photoUrl ASC")
-    suspend fun getUsers(): List<Cat>
+    suspend fun getCats(): List<Cat>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cat: Cat)
@@ -16,7 +16,7 @@ interface CatDao {
     suspend fun insert(cats: List<Cat>)
 
     @Query("DELETE FROM cat_table")
-    suspend fun deleteAllUsers()
+    suspend fun deleteAllCats()
 
     @Delete
     suspend fun delete(cat: Cat)

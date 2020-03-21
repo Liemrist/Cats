@@ -1,27 +1,21 @@
 package com.example.kotlincats.data
 
-import com.example.kotlincats.data.api.catApi.CatApi
-import com.example.kotlincats.data.api.hipsterIpsumApi.HipsterIpsumApi
+import com.example.kotlincats.data.api.ApiDataSource
 import com.example.kotlincats.data.database.CatDao
 import com.example.kotlincats.domain.model.Cat
 import javax.inject.Inject
 
 class CatRepository @Inject constructor(
     private val catDao: CatDao,
-    private val catApi: CatApi,
-    private val hipsterIpsumApi: HipsterIpsumApi,
-    private val catMapper: CatMapper
+    private val apiDataSource: ApiDataSource
 ) {
 
     suspend fun getCats(): List<Cat> {
-        var cats: List<Cat> = catDao.getUsers()
+        var cats: List<Cat> = catDao.getCats()
         // FIXME: DB is not populated here yet after storage clean.
 
         if (cats.isEmpty()) {
-            val catsFromApi = catApi.getCats(30)
-            val text = hipsterIpsumApi.getParagraphs(30);
-
-            cats = catMapper.mapCatsWithTextToUsers(catsFromApi, text)
+            cats = apiDataSource.getCats(30)
             insert(cats)
         }
 

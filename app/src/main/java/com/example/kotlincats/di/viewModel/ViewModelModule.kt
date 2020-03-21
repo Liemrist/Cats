@@ -1,8 +1,7 @@
-package com.example.kotlincats.di
+package com.example.kotlincats.di.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.kotlincats.di.viewModel.ViewModelKey
 import com.example.kotlincats.presentation.list.CatListViewModel
 import dagger.Binds
 import dagger.Module

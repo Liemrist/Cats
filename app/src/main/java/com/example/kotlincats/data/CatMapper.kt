@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class CatMapper @Inject constructor() {
 
-    fun mapCatsWithTextToUsers(
+    fun mapCatsWithText(
         catDtos: List<CatDto>,
         hipsterText: List<String>
     ): List<Cat> {
