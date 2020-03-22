@@ -1,6 +1,6 @@
 package com.example.kotlincats.di
 
-import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.kotlincats.data.database.CatDao
 import com.example.kotlincats.data.database.CatDatabase
@@ -13,9 +13,9 @@ class RoomModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(application: Application): CatDatabase {
+    fun provideDatabase(applicationContext: Context): CatDatabase {
         return Room.databaseBuilder(
-            application,
+            applicationContext,
             CatDatabase::class.java,
             "cat_database"
         ).build()

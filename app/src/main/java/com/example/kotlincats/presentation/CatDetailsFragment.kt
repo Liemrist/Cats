@@ -2,19 +2,18 @@ package com.example.kotlincats.presentation
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import coil.api.load
 import coil.transform.CircleCropTransformation
 import com.example.kotlincats.R
 import com.example.kotlincats.domain.model.Cat
+import kotlinx.android.synthetic.main.fragment_cat_details.*
 
 
 class CatDetailsFragment : Fragment() {
@@ -33,27 +32,22 @@ class CatDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_cat_details, container, false)
-
-        val textView = view.findViewById<TextView>(R.id.nameText)
-        textView.text = cat?.name ?: ""
-
-        val infoTextView = view.findViewById<TextView>(R.id.infoText)
-        infoTextView.text = cat?.info ?: ""
-
-        val imageView = view.findViewById<ImageView>(R.id.imageView)
-        imageView.load(cat?.photoUrl) {
-            crossfade(true)
-            placeholder(R.drawable.ic_launcher_foreground)
-            transformations(CircleCropTransformation())
-        }
-
-        return view
+        return inflater.inflate(R.layout.fragment_cat_details, container, false)
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        nameText.text = cat?.name ?: ""
+
+        infoText.text = cat?.info ?: ""
+
+        imageView.load(cat?.photoUrl) {
+            crossfade(true)
+            placeholder(R.drawable.ic_launcher_foreground)
+            transformations(CircleCropTransformation())
+        }
 
         val activity = activity as AppCompatActivity?
         val actionBar: ActionBar? = activity?.supportActionBar
