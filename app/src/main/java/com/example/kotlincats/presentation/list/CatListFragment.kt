@@ -72,8 +72,10 @@ class CatListFragment : Fragment() {
         })
 
         viewModel.handleLoadMore.observe(this, Observer {
-            catListAdapter.removeLoadingView()
-            catsScrollListener.setLoaded()
+            it.getContentIfNotHandled()?.let { // Only proceed if the event has never been handled
+                catListAdapter.removeLoadingView()
+                catsScrollListener.setLoaded()
+            }
         })
 
         // Action bar setup.
