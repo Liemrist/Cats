@@ -3,7 +3,6 @@ package com.example.kotlincats.presentation.list.adapters
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-
 class CatsScrollListener : RecyclerView.OnScrollListener() {
 
 

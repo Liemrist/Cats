@@ -8,7 +8,6 @@ import com.example.kotlincats.R
 import com.example.kotlincats.domain.model.Cat
 import kotlinx.android.synthetic.main.fragment_cat.view.*
 
-
 class CatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(cat: Cat, onClick: () -> Unit ) {

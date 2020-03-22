@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-
 class CatListViewModel @Inject constructor(
     private val catRepository: CatRepository
 ) : ViewModel() {
@@ -54,15 +53,5 @@ class CatListViewModel @Inject constructor(
 
     fun delete(cat: Cat) = viewModelScope.launch {
         catRepository.delete(cat)
-    }
-
-
-    fun insert(cat: Cat) = viewModelScope.launch {
-        catRepository.insert(cat)
-    }
-
-
-    fun insert(cats: List<Cat>) = viewModelScope.launch {
-        catRepository.insert(cats)
     }
 }

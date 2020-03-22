@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.R
 import com.example.kotlincats.domain.model.Cat
 
-
 class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -56,9 +55,10 @@ class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
 
 
     fun removeLoadingView() {
-        if (cats.isNotEmpty()) {
-            cats = cats.minus(cats[cats.size - 1])
-            notifyItemRemoved(cats.size)
+        val position = cats.indexOf(null)
+        if (position != -1) {
+            cats.minus(cats[position])
+            notifyItemRemoved(position)
         }
     }
 
