@@ -1,6 +1,5 @@
 package com.example.kotlincats.presentation
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -14,7 +13,6 @@ import coil.transform.CircleCropTransformation
 import com.example.kotlincats.R
 import com.example.kotlincats.domain.model.Cat
 import kotlinx.android.synthetic.main.fragment_cat_details.*
-
 
 class CatDetailsFragment : Fragment() {
 

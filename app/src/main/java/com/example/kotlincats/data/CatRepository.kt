@@ -26,9 +26,6 @@ class CatRepository @Inject constructor(
         return apiDataSource.getCats(quantity)
     }
 
-    suspend fun insert(cat: Cat) = catDao.insert(cat)
-
-
     suspend fun insert(cats: List<Cat>) = catDao.insert(cats)
 
 

@@ -24,7 +24,6 @@ import com.example.kotlincats.presentation.list.adapters.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.fragment_cat_list.*
 import javax.inject.Inject
 
-
 /**
  * A fragment representing a list of Cats.
  */
@@ -95,14 +94,13 @@ class CatListFragment : Fragment() {
         catList.apply {
             adapter = catListAdapter
             layoutManager = LinearLayoutManager(context)
-//            setHasFixedSize(true) // TODO: check.
+            // setHasFixedSize(true) // TODO: check.
         }
 
         // Handle swipe.
         ItemTouchHelper(object : SwipeToDeleteCallback(applicationContext) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // TODO: remove swipe handling for the loading item.
-                viewHolder.itemViewType
                 removeListRow(viewHolder.adapterPosition)
             }
         }).attachToRecyclerView(catList)
