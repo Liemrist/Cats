@@ -7,14 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import coil.api.load
 import coil.transform.CircleCropTransformation
 import com.example.kotlincats.R
+import com.example.kotlincats.databinding.FragmentCatDetailsBinding
 import com.example.kotlincats.domain.model.Cat
-import kotlinx.android.synthetic.main.fragment_cat_details.*
 
 class CatDetailsFragment : Fragment() {
+
+
+    private var _binding: FragmentCatDetailsBinding? = null
+    private val binding get() = _binding!!
 
     private var cat: Cat? = null
 
@@ -30,18 +35,19 @@ class CatDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_cat_details, container, false)
+        _binding = FragmentCatDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        nameText.text = cat?.name ?: ""
+        binding.nameText.text = cat?.name ?: ""
 
-        infoText.text = cat?.info ?: ""
+        binding.infoText.text = cat?.info ?: ""
 
-        imageView.load(cat?.photoUrl) {
+        binding.imageView.load(cat?.photoUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_foreground)
             transformations(CircleCropTransformation())
@@ -51,6 +57,12 @@ class CatDetailsFragment : Fragment() {
         val actionBar: ActionBar? = activity?.supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true)
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 
@@ -71,11 +83,9 @@ class CatDetailsFragment : Fragment() {
         private const val ARG_CAT = "ARG_CAT"
 
         fun newInstance(cat: Cat): CatDetailsFragment {
-            val fragment = CatDetailsFragment()
-            val bundle = Bundle()
-            bundle.putParcelable(ARG_CAT, cat)
-            fragment.arguments = bundle
-            return fragment
+            return CatDetailsFragment().apply {
+                arguments = bundleOf(ARG_CAT to cat)
+            }
         }
     }
 }

@@ -12,12 +12,6 @@ class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
-    private object Constant {
-        const val VIEW_TYPE_ITEM = 0
-        const val VIEW_TYPE_LOADING = 1
-    }
-
-
     private var cats: List<Cat?> = emptyList()
 
 
@@ -25,25 +19,36 @@ class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == Constant.VIEW_TYPE_ITEM) {
+        return if (viewType == VIEW_TYPE_ITEM) {
             val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_cat, parent, false)
+                .inflate(R.layout.cat_list_item, parent, false)
             CatViewHolder(view)
         } else {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.progress_loading, parent, false)
-            LoadingViewHolder(
-                view
-            )
+            LoadingViewHolder(view)
         }
     }
 
 
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val cat = cats[position]
+        if (cat != null) {
+            (holder as CatViewHolder).bind(cat) {
+                clickListener(position)
+            }
+        }
+    }
+
+
+    override fun getItemCount(): Int = cats.size
+
+
     override fun getItemViewType(position: Int): Int {
         return if (cats[position] == null) {
-            Constant.VIEW_TYPE_LOADING
+            VIEW_TYPE_LOADING
         } else {
-            Constant.VIEW_TYPE_ITEM
+            VIEW_TYPE_ITEM
         }
     }
 
@@ -63,9 +68,6 @@ class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
     }
 
 
-    override fun getItemCount(): Int = cats.size
-
-
     fun setCats(cats: List<Cat>) {
         this.cats = cats
         notifyDataSetChanged()
@@ -82,12 +84,8 @@ class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
     fun getCat(position: Int): Cat? = cats[position]
 
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val cat = cats[position]
-        if (cat != null) {
-            (holder as CatViewHolder).bind(cat) {
-                clickListener(position)
-            }
-        }
+    private companion object Constant {
+        private const val VIEW_TYPE_ITEM = 0
+        private const val VIEW_TYPE_LOADING = 1
     }
 }

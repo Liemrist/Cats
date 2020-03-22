@@ -7,6 +7,9 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    viewBinding {
+        enabled = true
+    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
@@ -53,6 +56,9 @@ dependencies {
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
 
     implementation 'io.coil-kt:coil:0.8.0'
+
+    // fragment
+    implementation 'androidx.fragment:fragment-ktx:1.2.3'
 
     // Room components
     implementation "androidx.room:room-runtime:$rootProject.roomVersion"

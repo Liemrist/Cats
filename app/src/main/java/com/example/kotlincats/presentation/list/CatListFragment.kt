@@ -16,12 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.R
 import com.example.kotlincats.application.CatsApplication
+import com.example.kotlincats.databinding.FragmentCatListBinding
 import com.example.kotlincats.di.viewModel.ViewModelFactory
 import com.example.kotlincats.presentation.CatDetailsFragment
 import com.example.kotlincats.presentation.list.adapters.CatListAdapter
 import com.example.kotlincats.presentation.list.adapters.CatsScrollListener
 import com.example.kotlincats.presentation.list.adapters.SwipeToDeleteCallback
-import kotlinx.android.synthetic.main.fragment_cat_list.*
 import javax.inject.Inject
 
 /**
@@ -29,6 +29,11 @@ import javax.inject.Inject
  */
 class CatListFragment : Fragment() {
 
+
+    private var _binding: FragmentCatListBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     private lateinit var catListAdapter: CatListAdapter
     private lateinit var catsScrollListener: CatsScrollListener
@@ -48,10 +53,12 @@ class CatListFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_cat_list, container, false)
+        _binding = FragmentCatListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
 
@@ -62,16 +69,16 @@ class CatListFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)[CatListViewModel::class.java]
 
-        viewModel.isProgressBarVisible.observe(this, Observer { isVisible ->
-            progressBar.isVisible = isVisible
-            catList.isVisible = !isVisible
+        viewModel.isProgressBarVisible.observe(viewLifecycleOwner, Observer { isVisible ->
+            binding.progressBar.isVisible = isVisible
+            binding.catList.isVisible = !isVisible
         })
 
-        viewModel.cats.observe(this, Observer { cats ->
+        viewModel.cats.observe(viewLifecycleOwner, Observer { cats ->
             catListAdapter.setCats(cats)
         })
 
-        viewModel.handleLoadMore.observe(this, Observer {
+        viewModel.handleLoadMore.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { // Only proceed if the event has never been handled
                 catListAdapter.removeLoadingView()
                 catsScrollListener.setLoaded()
@@ -86,6 +93,10 @@ class CatListFragment : Fragment() {
         viewModel.loadCats()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     private fun initCatList() {
         catListAdapter =
@@ -93,7 +104,7 @@ class CatListFragment : Fragment() {
                 showDetailsFragment(itemPosition)
             }
 
-        catList.apply {
+        binding.catList.apply {
             adapter = catListAdapter
             layoutManager = LinearLayoutManager(context)
             // setHasFixedSize(true) // TODO: check.
@@ -105,7 +116,7 @@ class CatListFragment : Fragment() {
                 // TODO: remove swipe handling for the loading item.
                 removeListRow(viewHolder.adapterPosition)
             }
-        }).attachToRecyclerView(catList)
+        }).attachToRecyclerView(binding.catList)
 
         // Handle load more.
         catsScrollListener = CatsScrollListener()
@@ -115,7 +126,7 @@ class CatListFragment : Fragment() {
                 viewModel.loadMoreCats()
             }
         })
-        catList.addOnScrollListener(catsScrollListener)
+        binding.catList.addOnScrollListener(catsScrollListener)
     }
 
 
@@ -135,7 +146,7 @@ class CatListFragment : Fragment() {
         activity?.supportFragmentManager
             ?.beginTransaction()
             ?.addToBackStack(null)
-            ?.replace(R.id.activity_main_frame, fragment)
+            ?.replace(R.id.fragment_container_view, fragment)
             ?.commit()
     }
 }

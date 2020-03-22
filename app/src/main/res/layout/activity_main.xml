@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.fragment.app.FragmentContainerView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_container_view"
+    android:name="com.example.kotlincats.presentation.list.CatListFragment"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.MainActivity">
-
-    <FrameLayout
-        android:id="@+id/activity_main_frame"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    android:layout_height="match_parent" />
