@@ -18,6 +18,9 @@ import com.example.kotlincats.R
 import com.example.kotlincats.application.CatsApplication
 import com.example.kotlincats.di.viewModel.ViewModelFactory
 import com.example.kotlincats.presentation.CatDetailsFragment
+import com.example.kotlincats.presentation.list.adapters.CatListAdapter
+import com.example.kotlincats.presentation.list.adapters.CatsScrollListener
+import com.example.kotlincats.presentation.list.adapters.SwipeToDeleteCallback
 import kotlinx.android.synthetic.main.fragment_cat_list.*
 import javax.inject.Inject
 
@@ -29,10 +32,15 @@ class CatListFragment : Fragment() {
 
 
     private lateinit var catListAdapter: CatListAdapter
+    private lateinit var catsScrollListener: CatsScrollListener
     private lateinit var viewModel: CatListViewModel
 
-    @Inject lateinit var applicationContext: Context
-    @Inject lateinit var viewModelFactory: ViewModelFactory
+
+    @Inject
+    lateinit var applicationContext: Context
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
 
     override fun onAttach(context: Context) {
@@ -64,6 +72,11 @@ class CatListFragment : Fragment() {
             catListAdapter.setCats(cats)
         })
 
+        viewModel.handleLoadMore.observe(this, Observer {
+            catListAdapter.removeLoadingView()
+            catsScrollListener.setLoaded()
+        })
+
         // Action bar setup.
         val activity = activity as AppCompatActivity?
         val actionBar: ActionBar? = activity?.supportActionBar
@@ -74,34 +87,50 @@ class CatListFragment : Fragment() {
 
 
     private fun initCatList() {
-        catListAdapter = CatListAdapter { itemPosition: Int ->
-            showDetailsFragment(itemPosition)
-        }
+        catListAdapter =
+            CatListAdapter { itemPosition: Int ->
+                showDetailsFragment(itemPosition)
+            }
 
         catList.apply {
             adapter = catListAdapter
             layoutManager = LinearLayoutManager(context)
+//            setHasFixedSize(true) // TODO: check.
         }
 
-        // Add swipe handling to RecyclerView.
+        // Handle swipe.
         ItemTouchHelper(object : SwipeToDeleteCallback(applicationContext) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // TODO: remove swipe handling for the loading item.
+                viewHolder.itemViewType
                 removeListRow(viewHolder.adapterPosition)
             }
         }).attachToRecyclerView(catList)
+
+        // Handle load more.
+        catsScrollListener = CatsScrollListener()
+        catsScrollListener.setOnLoadMoreListener(object : CatsScrollListener.OnLoadMoreListener {
+            override fun onLoadMore() {
+                catListAdapter.addLoadingView()
+                viewModel.loadMoreCats()
+            }
+        })
+        catList.addOnScrollListener(catsScrollListener)
     }
 
 
     private fun removeListRow(position: Int) {
-        viewModel.delete(catListAdapter.getCat(position))
+        val cat = catListAdapter.getCat(position) ?: return
+        viewModel.delete(cat)
         catListAdapter.removeRow(position)
     }
 
 
     private fun showDetailsFragment(position: Int) {
-        val fragment = CatDetailsFragment.newInstance(
-            catListAdapter.getCat(position)
-        )
+        // TODO: show error instead of return.
+        val cat = catListAdapter.getCat(position) ?: return
+
+        val fragment = CatDetailsFragment.newInstance(cat)
 
         activity?.supportFragmentManager
             ?.beginTransaction()
