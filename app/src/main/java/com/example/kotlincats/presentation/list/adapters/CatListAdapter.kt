@@ -1,6 +1,5 @@
 package com.example.kotlincats.presentation.list.adapters
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.R
 import com.example.kotlincats.domain.model.Cat
 
-class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
+class CatListAdapter(private val listener: Listener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
@@ -32,11 +31,8 @@ class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val cat = cats[position]
-        if (cat != null) {
-            (holder as CatViewHolder).bind(cat) {
-                clickListener(position)
-            }
+        if (holder.itemViewType == VIEW_TYPE_ITEM) {
+            cats[position]?.let { (holder as CatViewHolder).bind(it, listener) }
         }
     }
 
@@ -75,7 +71,7 @@ class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
 
 
     fun removeRow(position: Int) {
-        val cat = getCat(position)
+        val cat = cats[position]
         cats = cats.minus(cat)
         notifyItemRemoved(position)
     }
@@ -84,8 +80,13 @@ class CatListAdapter(private val clickListener: (itemPosition: Int) -> Unit) :
     fun getCat(position: Int): Cat? = cats[position]
 
 
-    private companion object Constant {
-        private const val VIEW_TYPE_ITEM = 0
-        private const val VIEW_TYPE_LOADING = 1
+    interface Listener {
+        fun onClick(cat: Cat)
+    }
+
+
+    companion object Constant {
+        const val VIEW_TYPE_ITEM = 0
+        const val VIEW_TYPE_LOADING = 1
     }
 }

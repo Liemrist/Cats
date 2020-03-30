@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import coil.api.load
-import coil.transform.CircleCropTransformation
 import com.example.kotlincats.R
 import com.example.kotlincats.databinding.FragmentCatDetailsBinding
 import com.example.kotlincats.domain.model.Cat
@@ -20,15 +19,6 @@ class CatDetailsFragment : Fragment() {
 
     private var _binding: FragmentCatDetailsBinding? = null
     private val binding get() = _binding!!
-
-    private var cat: Cat? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        cat = arguments?.getParcelable(ARG_CAT)
-    }
 
 
     override fun onCreateView(
@@ -43,6 +33,8 @@ class CatDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val cat: Cat? = arguments?.getParcelable(ARG_CAT)
+
         binding.nameText.text = cat?.name ?: ""
 
         binding.infoText.text = cat?.info ?: ""
@@ -50,7 +42,6 @@ class CatDetailsFragment : Fragment() {
         binding.imageView.load(cat?.photoUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_foreground)
-            transformations(CircleCropTransformation())
         }
 
         val activity = activity as AppCompatActivity?

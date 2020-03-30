@@ -34,6 +34,8 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
+        if (viewHolder.itemViewType == CatListAdapter.VIEW_TYPE_LOADING) { return }
+
         val itemView = viewHolder.itemView
         val itemHeight = itemView.bottom - itemView.top
 

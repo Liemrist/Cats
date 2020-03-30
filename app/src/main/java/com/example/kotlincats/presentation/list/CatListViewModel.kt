@@ -15,33 +15,34 @@ class CatListViewModel @Inject constructor(
 
 
     private val _cats = MutableLiveData<List<Cat>>()
-    private val _isProgressBarVisible = MutableLiveData<Boolean>()
+    private val _isProgressBarVisible = MutableLiveData<Event<Boolean>>()
     private val _handleLoadMore = MutableLiveData<Event<Boolean>>()
 
     val cats: LiveData<List<Cat>> get() = _cats
-    val isProgressBarVisible: LiveData<Boolean> get() = _isProgressBarVisible
+    val isProgressBarVisible: LiveData<Event<Boolean>> get() = _isProgressBarVisible
     val handleLoadMore : LiveData<Event<Boolean>> get() = _handleLoadMore
 
 
     fun loadCats() {
         viewModelScope.launch  {
             try {
-                _isProgressBarVisible.value = true
+                _isProgressBarVisible.value = Event(true)
                 val catsFromRepository = withContext(Dispatchers.IO) {
-                    catRepository.getCats(15)
+                    catRepository.getCats(INITIAL_ITEMS_NUMBER)
                 }
 
                 _cats.value = catsFromRepository
             } finally {
-                _isProgressBarVisible.value = false
+                _isProgressBarVisible.value = Event(false)
             }
         }
     }
 
+
     fun loadMoreCats() {
         viewModelScope.launch {
             val catsFromRepository = withContext(Dispatchers.IO) {
-                catRepository.getMoreCats(10)
+                catRepository.getMoreCats(ITEMS_NUMBER_MORE)
             }
 
             val moreCats = _cats.value?.plus(catsFromRepository)
@@ -51,7 +52,14 @@ class CatListViewModel @Inject constructor(
         }
     }
 
+
     fun delete(cat: Cat) = viewModelScope.launch {
         catRepository.delete(cat)
+    }
+
+
+    companion object {
+        private const val INITIAL_ITEMS_NUMBER = 15
+        private const val ITEMS_NUMBER_MORE = 10
     }
 }

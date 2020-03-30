@@ -10,9 +10,8 @@ import kotlinx.android.synthetic.main.cat_list_item.view.*
 
 class CatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(cat: Cat, onClick: () -> Unit ) {
+    fun bind(cat: Cat, listener: CatListAdapter.Listener ) {
         with(itemView) {
-            // FIXME: rename this view.
             item_number.text = cat.id.toString()
             content.text = cat.name
             profileImage.load(cat.photoUrl)  {
@@ -21,7 +20,7 @@ class CatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 transformations(CircleCropTransformation())
             }
 
-            setOnClickListener { onClick() }
+            setOnClickListener { listener.onClick(cat) }
         }
     }
 }

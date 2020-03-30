@@ -3,23 +3,15 @@ package com.example.kotlincats.presentation.list.adapters
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class CatsScrollListener : RecyclerView.OnScrollListener() {
+class CatsScrollListener(private val listener: LoadMoreListener)
+    : RecyclerView.OnScrollListener() {
 
 
-    private lateinit var onLoadMoreListener: OnLoadMoreListener
-    private var visibleThreshold = 3 // Progress bar will appear when user sees the 3rd item from the end.
     private var isLoading: Boolean = false
-    private var lastVisibleItem: Int = 0
-    private var totalItemCount:Int = 0
 
 
     fun setLoaded() {
         isLoading = false
-    }
-
-
-    fun setOnLoadMoreListener(mOnLoadMoreListener: OnLoadMoreListener) {
-        this.onLoadMoreListener = mOnLoadMoreListener
     }
 
 
@@ -28,17 +20,23 @@ class CatsScrollListener : RecyclerView.OnScrollListener() {
 
         if (dy <= 0) return
 
-        totalItemCount = recyclerView.layoutManager?.itemCount ?: 0
+        val totalItemCount = recyclerView.layoutManager?.itemCount ?: 0
 
-        lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+        val lastVisibleItem = (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
 
-        if (!isLoading && totalItemCount <= lastVisibleItem + visibleThreshold) {
-            onLoadMoreListener.onLoadMore()
+        if (!isLoading && totalItemCount <= lastVisibleItem + VISIBLE_THRESHOLD) {
+            listener.onScrolledToBottom()
             isLoading = true
         }
     }
 
-    interface OnLoadMoreListener {
-        fun onLoadMore()
+
+    interface LoadMoreListener {
+        fun onScrolledToBottom()
+    }
+
+
+    companion object {
+        private const val VISIBLE_THRESHOLD = 3 // Progress bar will appear when user sees the 3rd item from the end.
     }
 }
