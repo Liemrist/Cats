@@ -17,7 +17,7 @@ class RoomModule {
         return Room.databaseBuilder(
             applicationContext,
             CatDatabase::class.java,
-            "cat_database"
+            DATABASE_NAME
         ).build()
     }
 
@@ -25,5 +25,9 @@ class RoomModule {
     @Singleton
     fun provideUserDao(catDatabase: CatDatabase): CatDao {
         return catDatabase.userDao()
+    }
+
+    private companion object {
+        private const val DATABASE_NAME = "cat_database"
     }
 }

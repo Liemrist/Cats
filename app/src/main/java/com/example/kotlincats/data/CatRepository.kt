@@ -10,6 +10,7 @@ class CatRepository @Inject constructor(
     private val apiDataSource: ApiDataSource
 ) {
 
+
     suspend fun getCats(quantity: Int): List<Cat> {
         var cats: List<Cat> = catDao.getCats()
         // FIXME: DB is not populated here yet after storage clean.
@@ -22,9 +23,11 @@ class CatRepository @Inject constructor(
         return cats
     }
 
+
     suspend fun getMoreCats(quantity: Int): List<Cat> {
         return apiDataSource.getCats(quantity)
     }
+
 
     suspend fun insert(cats: List<Cat>) = catDao.insert(cats)
 

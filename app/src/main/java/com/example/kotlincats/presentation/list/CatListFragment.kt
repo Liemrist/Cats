@@ -35,14 +35,10 @@ class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
-    private var catListAdapter = CatListAdapter(this)
+    private val catListAdapter = CatListAdapter(this)
     private val catsScrollListener =  CatsScrollListener(this)
 
     private lateinit var viewModel: CatListViewModel
-
-
-    @Inject
-    lateinit var applicationContext: Context
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -122,11 +118,13 @@ class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.
         }
 
         // Handle swipe.
-        ItemTouchHelper(object : SwipeToDeleteCallback(applicationContext) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                removeListRow(viewHolder.adapterPosition)
-            }
-        }).attachToRecyclerView(binding.catList)
+        context?.let {
+            ItemTouchHelper(object : SwipeToDeleteCallback(it) {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    removeListRow(viewHolder.adapterPosition)
+                }
+            }).attachToRecyclerView(binding.catList)
+        }
     }
 
 
