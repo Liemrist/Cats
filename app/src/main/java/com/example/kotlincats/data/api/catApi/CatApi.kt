@@ -1,12 +1,13 @@
 package com.example.kotlincats.data.api.catApi
 
+import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface CatApi {
 
     @GET("images/search")
-    suspend fun getCats(
+    fun getCats(
         @Query("limit") catsNumber: Int
-    ): List<CatDto>
+    ): Single<List<CatDto>>
 }

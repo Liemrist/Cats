@@ -2,8 +2,10 @@ package com.example.kotlincats.data.api
 
 import com.example.kotlincats.data.CatMapper
 import com.example.kotlincats.data.api.catApi.CatApi
+import com.example.kotlincats.data.api.catApi.CatDto
 import com.example.kotlincats.data.api.hipsterIpsumApi.HipsterIpsumApi
 import com.example.kotlincats.domain.model.Cat
+import io.reactivex.Single
 import javax.inject.Inject
 
 class ApiDataSource @Inject constructor(
@@ -12,10 +14,14 @@ class ApiDataSource @Inject constructor(
     private val catMapper: CatMapper
 ) {
 
-    suspend fun getCats(quantity: Int): List<Cat> {
+    fun getCats(quantity: Int): Single<List<Cat>> {
         val catsFromApi = catApi.getCats(quantity)
-        val text = hipsterIpsumApi.getParagraphs(quantity);
+        return catsFromApi.flatMap { cats -> mapCatsToCatModel(cats, quantity) }
+    }
 
-        return catMapper.mapCatsWithText(catsFromApi, text)
+
+    private fun mapCatsToCatModel(cats: List<CatDto>, quantity: Int): Single<List<Cat>> {
+        val text = hipsterIpsumApi.getParagraphs(quantity)
+        return text.map { item -> catMapper.mapCatsWithText(cats, item) }
     }
 }

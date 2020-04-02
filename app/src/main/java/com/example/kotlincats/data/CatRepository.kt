@@ -3,6 +3,7 @@ package com.example.kotlincats.data
 import com.example.kotlincats.data.api.ApiDataSource
 import com.example.kotlincats.data.database.CatDao
 import com.example.kotlincats.domain.model.Cat
+import io.reactivex.Single
 import javax.inject.Inject
 
 class CatRepository @Inject constructor(
@@ -11,24 +12,24 @@ class CatRepository @Inject constructor(
 ) {
 
 
-    suspend fun getCats(quantity: Int): List<Cat> {
-        var cats: List<Cat> = catDao.getCats()
+    fun getCats(quantity: Int): Single<List<Cat>> {
+//        var cats: List<Cat> = catDao.getCats()
         // FIXME: DB is not populated here yet after storage clean.
 
-        if (cats.isEmpty()) {
-            cats = apiDataSource.getCats(quantity)
-            insert(cats)
-        }
+//        if (cats.isEmpty()) {
+            return apiDataSource.getCats(quantity)
+//            insert(cats)
+//        }
 
-        return cats
+//        return cats
     }
 
 
-    suspend fun getMoreCats(quantity: Int): List<Cat> {
+    fun getMoreCats(quantity: Int): Single<List<Cat>> {
         return apiDataSource.getCats(quantity)
     }
 
-
+//     Completable
     suspend fun insert(cats: List<Cat>) = catDao.insert(cats)
 
 
