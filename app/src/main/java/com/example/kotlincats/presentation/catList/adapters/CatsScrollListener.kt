@@ -1,4 +1,4 @@
-package com.example.kotlincats.presentation.list.adapters
+package com.example.kotlincats.presentation.catList.adapters
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView

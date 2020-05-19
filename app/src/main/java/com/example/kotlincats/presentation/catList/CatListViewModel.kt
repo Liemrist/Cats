@@ -1,8 +1,13 @@
-package com.example.kotlincats.presentation.list
+package com.example.kotlincats.presentation.catList
 
-import androidx.lifecycle.*
-import com.example.kotlincats.domain.model.Cat
-import com.example.kotlincats.data.CatRepository
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.kotlincats.domain.models.Cat
+import com.example.kotlincats.domain.usecases.DeleteCatUseCase
+import com.example.kotlincats.domain.usecases.GetCatsUseCase
+import com.example.kotlincats.domain.usecases.SaveCatsUseCase
 import com.example.kotlincats.util.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -10,9 +15,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CatListViewModel @Inject constructor(
-    private val catRepository: CatRepository
+    private val getCatsUseCase: GetCatsUseCase,
+    private val saveCatsUseCase: SaveCatsUseCase,
+    private val deleteCatUseCase: DeleteCatUseCase
 ) : ViewModel() {
-
 
     private val _cats = MutableLiveData<List<Cat>>()
     private val _isProgressBarVisible = MutableLiveData<Event<Boolean>>()
@@ -20,15 +26,21 @@ class CatListViewModel @Inject constructor(
 
     val cats: LiveData<List<Cat>> get() = _cats
     val isProgressBarVisible: LiveData<Event<Boolean>> get() = _isProgressBarVisible
-    val handleLoadMore : LiveData<Event<Boolean>> get() = _handleLoadMore
+    val handleLoadMore: LiveData<Event<Boolean>> get() = _handleLoadMore
 
 
-    fun loadCats() {
-        viewModelScope.launch  {
+    fun initCats() {
+        if (_cats.value !== null) return
+
+        viewModelScope.launch {
             try {
                 _isProgressBarVisible.value = Event(true)
                 val catsFromRepository = withContext(Dispatchers.IO) {
-                    catRepository.getCats(INITIAL_ITEMS_NUMBER)
+                    getCatsUseCase.execute(ITEMS_NUMBER)
+                }
+
+                withContext(Dispatchers.IO) {
+                    saveCatsUseCase.execute(catsFromRepository)
                 }
 
                 _cats.value = catsFromRepository
@@ -42,7 +54,7 @@ class CatListViewModel @Inject constructor(
     fun loadMoreCats() {
         viewModelScope.launch {
             val catsFromRepository = withContext(Dispatchers.IO) {
-                catRepository.getMoreCats(ITEMS_NUMBER_MORE)
+                getCatsUseCase.execute(ITEMS_NUMBER)
             }
 
             val moreCats = _cats.value?.plus(catsFromRepository)
@@ -54,12 +66,13 @@ class CatListViewModel @Inject constructor(
 
 
     fun delete(cat: Cat) = viewModelScope.launch {
-        catRepository.delete(cat)
+        withContext(Dispatchers.IO) {
+            deleteCatUseCase.execute(cat)
+        }
     }
 
 
     companion object {
-        private const val INITIAL_ITEMS_NUMBER = 15
-        private const val ITEMS_NUMBER_MORE = 10
+        private const val ITEMS_NUMBER = 10
     }
 }

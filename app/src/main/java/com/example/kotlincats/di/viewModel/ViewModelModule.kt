@@ -2,7 +2,7 @@ package com.example.kotlincats.di.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.kotlincats.presentation.list.CatListViewModel
+import com.example.kotlincats.presentation.catList.CatListViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

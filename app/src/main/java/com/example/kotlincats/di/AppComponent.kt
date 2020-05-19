@@ -2,7 +2,7 @@ package com.example.kotlincats.di
 
 import android.content.Context
 import com.example.kotlincats.di.viewModel.ViewModelModule
-import com.example.kotlincats.presentation.list.CatListFragment
+import com.example.kotlincats.presentation.catList.CatListFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -12,7 +12,8 @@ import javax.inject.Singleton
     modules = [
         NetworkModule::class,
         DatabaseModule::class,
-        ViewModelModule::class
+        ViewModelModule::class,
+        RepositoryModule::class
     ]
 )
 interface AppComponent {

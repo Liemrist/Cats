@@ -1,11 +1,10 @@
-package com.example.kotlincats.presentation.list
+package com.example.kotlincats.presentation.catList
 
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -18,18 +17,24 @@ import com.example.kotlincats.R
 import com.example.kotlincats.application.CatsApplication
 import com.example.kotlincats.databinding.FragmentCatListBinding
 import com.example.kotlincats.di.viewModel.ViewModelFactory
-import com.example.kotlincats.domain.model.Cat
+import com.example.kotlincats.domain.models.Cat
 import com.example.kotlincats.presentation.CatDetailsFragment
-import com.example.kotlincats.presentation.list.adapters.CatListAdapter
-import com.example.kotlincats.presentation.list.adapters.CatsScrollListener
-import com.example.kotlincats.presentation.list.adapters.SwipeToDeleteCallback
+import com.example.kotlincats.presentation.catList.adapters.CatListAdapter
+import com.example.kotlincats.presentation.catList.adapters.CatsScrollListener
+import com.example.kotlincats.presentation.catList.adapters.SwipeToDeleteCallback
 import javax.inject.Inject
 
 /**
- * A fragment representing a list of Cats.
+ * A fragment representing the list of Cats.
  */
 class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.LoadMoreListener {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel: CatListViewModel by lazy {
+        ViewModelProviders.of(this, viewModelFactory)[CatListViewModel::class.java]
+    }
 
     private var _binding: FragmentCatListBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
@@ -37,11 +42,6 @@ class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.
 
     private val catListAdapter = CatListAdapter(this)
     private val catsScrollListener =  CatsScrollListener(this)
-
-    private lateinit var viewModel: CatListViewModel
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
 
 
     override fun onAttach(context: Context) {
@@ -63,11 +63,11 @@ class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupActionBar()
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+        }
 
         initCatList()
-
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[CatListViewModel::class.java]
 
         viewModel.isProgressBarVisible.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { isVisible ->
@@ -87,7 +87,7 @@ class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.
             }
         })
 
-        viewModel.loadCats()
+        viewModel.initCats()
     }
 
 
@@ -117,7 +117,7 @@ class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.
             addOnScrollListener(catsScrollListener)
         }
 
-        // Handle swipe.
+        // Handle remove row on swipe.
         context?.let {
             ItemTouchHelper(object : SwipeToDeleteCallback(it) {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -125,13 +125,6 @@ class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.
                 }
             }).attachToRecyclerView(binding.catList)
         }
-    }
-
-
-    private fun setupActionBar() {
-        val activity = activity as AppCompatActivity?
-        val actionBar: ActionBar? = activity?.supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(false)
     }
 
 

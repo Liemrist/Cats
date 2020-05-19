@@ -11,10 +11,9 @@ import androidx.fragment.app.Fragment
 import coil.api.load
 import com.example.kotlincats.R
 import com.example.kotlincats.databinding.FragmentCatDetailsBinding
-import com.example.kotlincats.domain.model.Cat
+import com.example.kotlincats.domain.models.Cat
 
 class CatDetailsFragment : Fragment() {
-
 
     private var _binding: FragmentCatDetailsBinding? = null
     private val binding get() = _binding!!

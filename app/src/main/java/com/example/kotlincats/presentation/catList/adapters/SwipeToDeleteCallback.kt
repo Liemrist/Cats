@@ -1,4 +1,4 @@
-package com.example.kotlincats.presentation.list.adapters
+package com.example.kotlincats.presentation.catList.adapters
 
 import android.content.Context
 import android.graphics.Canvas

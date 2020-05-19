@@ -1,11 +1,11 @@
-package com.example.kotlincats.presentation.list.adapters
+package com.example.kotlincats.presentation.catList.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kotlincats.R
-import com.example.kotlincats.domain.model.Cat
+import com.example.kotlincats.domain.models.Cat
 
 class CatListAdapter(private val listener: Listener) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
