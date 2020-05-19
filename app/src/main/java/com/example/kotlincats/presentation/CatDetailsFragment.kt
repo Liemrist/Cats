@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -33,21 +32,19 @@ class CatDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val cat: Cat? = arguments?.getParcelable(ARG_CAT)
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+        }
+        setHasOptionsMenu(true)
 
-        binding.nameText.text = cat?.name ?: ""
+        val cat: Cat = arguments?.getParcelable(ARG_CAT) ?: return
 
-        binding.infoText.text = cat?.info ?: ""
-
-        binding.imageView.load(cat?.photoUrl) {
+        binding.nameText.text = cat.name
+        binding.infoText.text = cat.info
+        binding.imageView.load(cat.photoUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_launcher_foreground)
         }
-
-        val activity = activity as AppCompatActivity?
-        val actionBar: ActionBar? = activity?.supportActionBar
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        setHasOptionsMenu(true)
     }
 
 

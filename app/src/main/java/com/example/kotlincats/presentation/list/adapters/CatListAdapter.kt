@@ -34,6 +34,7 @@ class CatListAdapter(private val listener: Listener) :
         if (holder.itemViewType == VIEW_TYPE_ITEM) {
             cats[position]?.let { (holder as CatViewHolder).bind(it, listener) }
         }
+
     }
 
 

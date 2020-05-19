@@ -45,7 +45,7 @@ class CatListFragment : Fragment(), CatListAdapter.Listener, CatsScrollListener.
 
 
     override fun onAttach(context: Context) {
-        (context.applicationContext as CatsApplication).appComponent.inject(this)
+        (context.applicationContext as CatsApplication).component.inject(this)
         super.onAttach(context)
     }
 
